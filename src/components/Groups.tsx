@@ -1,11 +1,16 @@
 
+import { useState } from "react";
 import { Users, Plus, Search, Filter, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FlashcardGenerator } from "./FlashcardGenerator";
 
 export const Groups = () => {
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [showFlashcards, setShowFlashcards] = useState(false);
+
   const groups = [
     {
       name: "CS 101 - Introduction to Programming",
@@ -44,6 +49,26 @@ export const Groups = () => {
       university: "Various"
     }
   ];
+
+  const handleGroupClick = (group: any) => {
+    setSelectedGroup(group);
+    setShowFlashcards(true);
+  };
+
+  const handleBackToGroups = () => {
+    setShowFlashcards(false);
+    setSelectedGroup(null);
+  };
+
+  if (showFlashcards && selectedGroup) {
+    return (
+      <FlashcardGenerator
+        groupName={selectedGroup.name}
+        topic={selectedGroup.course}
+        onBack={handleBackToGroups}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -110,8 +135,12 @@ export const Groups = () => {
                   <Button className="flex-1" size="sm">
                     Join Group
                   </Button>
-                  <Button variant="outline" size="sm">
-                    View Details
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleGroupClick(group)}
+                  >
+                    Generate Flashcards
                   </Button>
                 </div>
               </div>
